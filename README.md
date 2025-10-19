@@ -1,6 +1,6 @@
 # 👋 Hi, I'm Mathis Weil!
 
-🎓 **Computer Science Student** | 🎓 **Queen Mary University of London**  
+🎓 **Data Science and Machine Learning Student** | 🎓 **University College London**  
 🌟 Passionate about AI, finance, and software engineering.  
 🌍 Always eager to learn, innovate, and contribute to impactful projects.
 
@@ -8,7 +8,7 @@
 
 ## 🔧 Technical Skills
 - **Languages**: Python, Java, TypeScript (React, Next.js), SQL
-- **Frameworks & Libraries**: TensorFlow, Selenium, Pandas, LangChain
+- **Frameworks & Libraries**: pytorch, numpy, scickit-learn, fastAPI, Selenium, Pandas, LangChain
 - **Databases**: MySQL, Oracle
 - **Tools & Concepts**: Data Structures & Algorithms, Embedding Models, Web Crawling
 
@@ -38,9 +38,16 @@
 ## 💻 Professional Experience
 
 ### **Computer Science Lab Demonstrator** – *Queen Mary University of London*  
-*Sep 2024 – Present*  
-- Mentored over 300 students in database systems labs and provided feedback on coursework.
+*Sep 2025 – Present*  
+- Support MSc Computer Science students in Introductory Programming, Computer Architecture & Operating Systems, and Software Engineering.
+- Lead lab sessions, guide coursework, and provide feedback to strengthen technical skills and problem-solving.
+- Mark exams and coursework, ensuring fair and consistent evaluation.
+
+### **Computer Science Lab Demonstrator** – *Queen Mary University of London*  
+*Sep 2024 – May 2025*  
+- Mentored over 300+ students in database systems, operating systems, internet applications and protocols, and provided feedback on coursework.
 - Designed new coursework integrating information retrieval and machine learning concepts.
+- Awarded demonstrator of the year for teaching excellence
 
 ### **Software Engineer Intern** – *Groupe Prunay*  
 *Jul 2024 – Aug 2024*  
@@ -56,7 +63,11 @@
 
 ## 🎓 Education
 - **BSc Computer Science** – *Queen Mary University of London*  
-  *Sep 2022 – Jul 2025 (Predicted First Class Honours)*  
+  *Sep 2025 – Present*  
+  - Key Modules: Bayesian Deep Learning, Applied Machine Learning, Statistical Data Science, Statistical Natural Language Processing, Digital Finance
+ 
+- **BSc Computer Science** – *Queen Mary University of London*  
+  *Sep 2022 – Jul 2025 (First Class Honours, 83% overall)*  
   - Key Modules: Neural Networks, Security Engineering, Software Engineering, Algorithms
 
 - **French Baccalaureate (Mathematics & Physics)** – *Lycée Notre-Dame du Grandchamp*  
@@ -67,7 +78,7 @@
 
 ## 🌟 Certifications & Online Learning
 - **Mathematics for Machine Learning** – *Coursera, Imperial College*
-- **Financial Markets** – *Coursera, Yale*
+- **Jr penetration tester, pre-security** – *TryHackMe*
 - **Cambridge Advanced (C1)**
 
 ---
