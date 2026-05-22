@@ -23,7 +23,7 @@ Investigated train-test distribution shift caused by post-hoc KV cache eviction 
 
 **Stack:** PyTorch · Hugging Face Transformers · PEFT (LoRA) · Llama 3.2 1B · NAMM
 
-🔗 [Code](#https://github.com/mathisweil/evo-memory)
+🔗 [Code](https://github.com/mathisweil/evo-memory)
 
 ### Discrete Diffusion Planners on Craftax & MiniHack
 *UCL Open-Endedness & General Intelligence, 2026*
@@ -36,7 +36,7 @@ Investigated Remasking Discrete Diffusion Models (ReMDM) as non-myopic planners 
 
 **Stack:** PyTorch · JAX · Craftax · MiniHack
 
-🔗 [Craftax Code](#https://github.com/mathisweil/craftax-ReMDM-planner) [Minihack Code](#[https://github.com/mathisweil/craftax-ReMDM-planner](https://github.com/mathisweil/minihack-ReMDM-planner))
+🔗 [Craftax Code](https://github.com/mathisweil/craftax-ReMDM-planner) [Minihack Code](https://github.com/mathisweil/minihack-ReMDM-planner)
 
 ---
 
@@ -53,7 +53,7 @@ Semantic search engine over 1,200+ courses, integrated into a Retrieval-Augmente
 
 **Stack:** Python · Sentence-BERT · PostgreSQL · pgvector · FastAPI
 
-🔗 [Code](#https://github.com/mathisweil/SkillFindr-SemanticSearchEngine)
+🔗 [Code](https://github.com/mathisweil/SkillFindr-SemanticSearchEngine)
 
 ### Other notable work
 
