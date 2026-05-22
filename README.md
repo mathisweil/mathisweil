@@ -81,7 +81,7 @@ Semantic search engine over 1,200+ courses, integrated into a Retrieval-Augmente
 
 **University College London** · MSc Data Science & Machine Learning
 *2025 to 2026*
-Modules: Statistical NLP, Open-Endedness & General Intelligence, Bayesian Deep Learning, Digital Finance, Data Mining, Statistical Inference.
+Modules: Applied Machine Learning, Introduction to Statistical Data Science, Statistical Natural Language Processing, Information Retrieval & Data Mining, Bayesian Deep Learning, Open-Endedness & General Intelligence, Digital Finance. Capped by a 60-credit MSc Project.
 
 **Queen Mary University of London** · BSc Computer Science
 *2022 to 2025* · First Class Honours, 83% overall
