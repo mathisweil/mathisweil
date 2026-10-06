@@ -6,7 +6,7 @@ ML engineer and researcher working on diffusion planners, RL fine-tuning and fed
 
 I have just finished the MSc in Data Science and Machine Learning at UCL, with a co-first-authored NeurIPS 2026 workshop paper on masked diffusion planners and a thesis on federated gradient boosting for insurance pricing, in collaboration with Ki, a digital syndicate in the Lloyd's market.
 
-**Open to ML engineering, applied research and data science roles in London.** UK Graduate visa, no sponsorship needed.
+**Open to ML engineering, applied research and data science roles in London.** Eligible for the UK Graduate visa, no sponsorship needed.
 
 ## News
 
