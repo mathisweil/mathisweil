@@ -20,7 +20,6 @@ W, H, M, FPS = 840, 480, 24, 10
 BG, INK, MUTED, FAINT = "#0d1117", "#e6edf3", "#8b949e", "#6e7681"
 RULE, CELL, ACCENT, HARM = "#30363d", "#21262d", "#3987e5", "#e66767"
 GAIN = ACCENT
-CONTENT = (24, 80, 816, 416)
 FONTS = {
     "serif": ("/usr/share/fonts/stix-fonts/STIX2Text-Regular.otf", "STIXGeneral.ttf"),
     "italic": (
@@ -56,7 +55,7 @@ def caps(
     y: int,
     text: str,
     *,
-    right: bool = False,
+    align: str = "left",
     fill: str = MUTED,
     size: int = 13,
     tracking: int = 1,
@@ -64,8 +63,7 @@ def caps(
     f = font("label", size)
     text = text.upper()
     width = sum(f.getlength(c) for c in text) + tracking * (len(text) - 1)
-    if right:
-        x -= width
+    x -= {"left": 0, "centre": width / 2, "right": width}[align]
     for c in text:
         d.text((x, y), c, font=f, fill=fill, anchor="ls")
         x += f.getlength(c) + tracking
@@ -78,11 +76,11 @@ def value(
     y: int,
     text: str,
     *,
-    right: bool = False,
+    align: str = "left",
     size: int = 20,
     fill: str = INK,
 ) -> None:
-    anchor = "rs" if right else "ls"
+    anchor = {"left": "ls", "centre": "ms", "right": "rs"}[align]
     d.text((x, y), text, font=font("value", size), fill=fill, anchor=anchor)
 
 
@@ -124,11 +122,11 @@ def chrome(
 ) -> Image.Image:
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    kicker_width = caps(d, W - M, 48, kicker, right=True)
+    kicker_width = caps(d, W - M, 48, kicker, align="right")
     headline(d, runs, W - 3 * M - kicker_width)
     hairline(d, M, 64, W - M, 64)
     hairline(d, M, 432, W - M, 432)
-    footer = caps(d, M, 456, foot_left) + caps(d, W - M, 456, foot_right, right=True)
+    footer = caps(d, M, 456, foot_left) + caps(d, W - M, 456, foot_right, align="right")
     if footer > W - 3 * M:
         raise ValueError(f"footer is {footer:.0f} px, over {W - 3 * M}")
     return img
@@ -175,18 +173,28 @@ RESULTS_FOOT = (
     "FREMTPL2 · RATE MULTIPLIERS · 10 INSURERS",
     "PTS OF DEVIANCE EXPLAINED VS LOCAL-ONLY",
 )
-CAPTIONS = {
-    112: ("EACH INSURER SUMS", "GRADIENTS AND", "HESSIANS PER BIN"),
-    210: ("COORDINATOR ADDS", "THE SUMS, RETURNS", "THE TOTALS"),
-    330: ("EACH INSURER SCORES", "THE TOTALS, GROWS", "THE SAME SPLIT"),
-}
-A_MID, A_PX, C_MID, C_PX, TREE_Y = 124, 24, 324, 16, 352
-B_MID, B_PX = 228, 48
-PX_PER_PT, ZERO_Y, TICK_Y = 12, 178, 400
-POSTER_HOLD, HARM_HOLD, EASE_FRAMES = 5, 20, 8
+CAPTIONS = (
+    "EACH INSURER SUMS GRADIENTS PER BIN",
+    "THE COORDINATOR ADDS THEM AND PICKS THE BEST SPLIT",
+    "EVERY INSURER APPLIES THE SAME SPLIT",
+)
+FAINT_HARM = "#382227"
+A_PITCH, A_BAR, B_PITCH, B_BAR = 8, 6, 36, 28
+A_W, B_W = A_PITCH * (BINS - 1) + A_BAR, B_PITCH * (BINS - 1) + B_BAR
+COL_PITCH, SPLIT_GAP, PANEL_W = 79, 2, 248
+A_MID, A_PX, DIGIT_Y, UP_Y = 124, 32, 174, 186
+B_TOP, B_MID, B_PX, B_BOTTOM = 198, 246, 48, 302
+DOWN_Y, C_MID, C_CUT, TREE_Y = 310, 348, 28, 390
+PX_PER_PT, ZERO_Y, TICK_Y, GRID_PTS = 12, 178, 400, (5, 10, 15)
+POSTER_HOLD, HARM_HOLD, EASE_FRAMES, SPLIT_HOLD = 5, 25, 14, 20
 
 
-Label = tuple[int, int, str, str]
+class Label(NamedTuple):
+    x: int
+    y: int
+    anchor: str
+    text: str
+    fill: str = INK
 
 
 class Cell(NamedTuple):
@@ -229,6 +237,8 @@ def check(cells: list[Cell]) -> None:
         raise ValueError(f"harmed counts {harmed}, thesis Table 5.1 has [0, 5, 7]")
     if min(cells[-1].fed) != -16.21:
         raise ValueError(f"worst gain {min(cells[-1].fed)}, thesis has -16.21")
+    if min(cells[-1].recal) != 1.01:
+        raise ValueError(f"least refit gain {min(cells[-1].recal)}, thesis has 1.01")
     if min(min(c.recal) for c in cells) <= 0:
         raise ValueError("a recalibrated gain is not above local-only")
     if [c.heterogeneity for c in cells] != ["0.004", "0.014", "0.048"]:
@@ -256,15 +266,15 @@ def best_cut(g: np.ndarray, h: np.ndarray, lam: float = 1.0) -> int:
 
 
 def col_x(k: int) -> int:
-    return 228 + 60 * k
+    return M + 10 + COL_PITCH * k
 
 
 def centre(k: int) -> int:
-    return col_x(k) + 23
+    return col_x(k) + A_W // 2
 
 
 TRUNK = (centre(0) + centre(SILOS - 1)) // 2
-B_X = TRUNK - (24 * BINS - 7) // 2
+B_X = TRUNK - B_W // 2
 
 
 def histogram(
@@ -274,8 +284,8 @@ def histogram(
     values: np.ndarray,
     scale: float,
     fill: str,
-    pitch: int = 6,
-    width: int = 4,
+    pitch: int = A_PITCH,
+    width: int = A_BAR,
 ) -> None:
     for b, v in enumerate(values):
         h = round(float(v) * scale)
@@ -286,11 +296,19 @@ def histogram(
         d.rectangle((x, y0, x + width - 1, y1), fill=fill)
 
 
+def gap_x(x0: int, cut: int, pitch: int, width: int) -> int:
+    return x0 + pitch * cut - (pitch - width) // 2 - 1
+
+
+def cut_line(d: ImageDraw.ImageDraw, x: int, y0: int, y1: int) -> None:
+    d.rectangle((x, y0, x + 1, y1), fill=INK)
+
+
 def digits(
     d: ImageDraw.ImageDraw, y: int, xs: list[int], active: int | None = None
 ) -> None:
     for k, x in enumerate(xs):
-        caps(d, x - 4, y, str(k), fill=INK if k == active else MUTED)
+        caps(d, x, y, str(k), align="centre", fill=INK if k == active else MUTED)
 
 
 def arrow(d: ImageDraw.ImageDraw, x: int, y: int, fill: str) -> None:
@@ -298,107 +316,120 @@ def arrow(d: ImageDraw.ImageDraw, x: int, y: int, fill: str) -> None:
 
 
 def up_path(d: ImageDraw.ImageDraw, k: int, fill: str = FAINT) -> None:
-    hairline(d, centre(k), 152, centre(k), 160, fill)
-    hairline(d, centre(k), 160, TRUNK, 160, fill)
-    hairline(d, TRUNK, 160, TRUNK, 175, fill)
-    arrow(d, TRUNK, 176, fill)
+    hairline(d, centre(k), UP_Y - 6, centre(k), UP_Y, fill)
+    hairline(d, centre(k), UP_Y, TRUNK, UP_Y, fill)
+    hairline(d, TRUNK, UP_Y, TRUNK, B_TOP - 3, fill)
+    arrow(d, TRUNK, B_TOP - 2, fill)
 
 
 def down_bus(d: ImageDraw.ImageDraw, fill: str = FAINT) -> None:
-    hairline(d, TRUNK, 280, TRUNK, 296, fill)
-    hairline(d, centre(0), 296, centre(SILOS - 1), 296, fill)
+    hairline(d, TRUNK, B_BOTTOM + 2, TRUNK, DOWN_Y, fill)
+    hairline(d, centre(0), DOWN_Y, centre(SILOS - 1), DOWN_Y, fill)
     for k in range(SILOS):
-        hairline(d, centre(k), 296, centre(k), 303, fill)
-        arrow(d, centre(k), 304, fill)
+        hairline(d, centre(k), DOWN_Y, centre(k), DOWN_Y + 7, fill)
+        arrow(d, centre(k), DOWN_Y + 8, fill)
 
 
 def tree(d: ImageDraw.ImageDraw, cx: int, grown: bool) -> None:
+    root = (cx - 5, TREE_Y, cx + 4, TREE_Y + 9)
     if not grown:
-        d.rectangle((cx - 4, TREE_Y, cx + 3, TREE_Y + 7), fill=RULE)
+        d.rectangle(root, fill=RULE)
         return
-    hairline(d, cx, TREE_Y + 8, cx, TREE_Y + 15, FAINT)
-    hairline(d, cx - 12, TREE_Y + 16, cx + 12, TREE_Y + 16, FAINT)
-    for x in (cx - 12, cx + 12):
-        hairline(d, x, TREE_Y + 16, x, TREE_Y + 21, FAINT)
-        d.rectangle((x - 4, TREE_Y + 22, x + 3, TREE_Y + 29), fill=INK)
-    d.rectangle((cx - 4, TREE_Y, cx + 3, TREE_Y + 7), fill=INK)
+    hairline(d, cx, TREE_Y + 10, cx, TREE_Y + 13, FAINT)
+    hairline(d, cx - 16, TREE_Y + 14, cx + 16, TREE_Y + 14, FAINT)
+    for x in (cx - 16, cx + 16):
+        hairline(d, x, TREE_Y + 14, x, TREE_Y + 17, FAINT)
+        d.rectangle((x - 5, TREE_Y + 18, x + 4, TREE_Y + 27), fill=INK)
+    d.rectangle(root, fill=INK)
 
 
 def method_stage() -> Image.Image:
     img = chrome(METHOD_HEAD, KICKER, *METHOD_FOOT)
     d = ImageDraw.Draw(img)
-    for y, lines in CAPTIONS.items():
-        for i, line in enumerate(lines):
-            caps(d, M, y + 18 * i, line)
     for k in range(SILOS):
+        x = col_x(k)
         up_path(d, k)
-        hairline(d, col_x(k), A_MID, col_x(k) + 45, A_MID)
-        hairline(d, col_x(k), C_MID, col_x(k) + 45, C_MID)
+        hairline(d, x, A_MID, x + A_W - 1, A_MID)
+        hairline(d, x - SPLIT_GAP, C_MID, x + A_W - 1 + SPLIT_GAP, C_MID)
     down_bus(d)
-    hairline(d, B_X, B_MID, B_X + 24 * BINS - 7, B_MID)
-    corner_ticks(d, (B_X - 12, 180, B_X + 24 * BINS + 5, 276))
-    digits(d, TICK_Y, [centre(k) for k in range(SILOS)])
+    hairline(d, B_X, B_MID, B_X + B_W - 1, B_MID)
+    corner_ticks(d, (B_X - 12, B_TOP, B_X + B_W + 11, B_BOTTOM))
     return img
+
+
+def split_histogram(
+    d: ImageDraw.ImageDraw, x0: int, values: np.ndarray, scale: float, cut: int
+) -> None:
+    right = x0 + SPLIT_GAP + A_PITCH * cut
+    histogram(d, x0 - SPLIT_GAP, C_MID, values[:cut], scale, MUTED)
+    histogram(d, right, C_MID, values[cut:], scale, MUTED)
+    cut_line(d, gap_x(x0, cut, A_PITCH, A_BAR), C_MID - C_CUT, C_MID + C_CUT)
 
 
 def method_frame(
     stage: Image.Image,
     g: np.ndarray,
-    scales: tuple[float, float, float],
+    scales: tuple[float, float],
     *,
-    upto: int = 0,
+    phase: int = 0,
+    shown: int = SILOS,
     active: int | None = None,
-    sending: bool = False,
-    returned: bool = False,
+    up: bool = False,
     cut: int | None = None,
     chosen: bool = False,
-    grown: bool = False,
+    down: bool = False,
+    split: bool = False,
 ) -> Image.Image:
     img = stage.copy()
     d = ImageDraw.Draw(img)
-    digits(d, 92, [centre(k) for k in range(SILOS)], active)
-    if active is not None:
-        up_path(d, active, INK)
-    if sending:
-        down_bus(d, ACCENT)
+    caps(d, M, 92, CAPTIONS[phase])
+    digits(d, DIGIT_Y, [centre(k) for k in range(SILOS)], active)
     for k in range(SILOS):
-        fill = INK if k == active else MUTED
-        histogram(d, col_x(k), A_MID, g[k], scales[0], fill)
-        if returned:
-            histogram(d, col_x(k), C_MID, g.sum(0), scales[2], ACCENT)
-        tree(d, centre(k), grown)
-    summed = g[:upto].sum(0)
-    histogram(d, B_X, B_MID, summed, scales[1], ACCENT, pitch=24, width=18)
+        if up:
+            up_path(d, k, INK)
+        if k < shown:
+            fill = INK if k == active else MUTED
+            histogram(d, col_x(k), A_MID, g[k], scales[0], fill)
+        if split and cut is not None:
+            split_histogram(d, col_x(k), g[k], scales[0], cut)
+        tree(d, centre(k), split)
+    if down:
+        down_bus(d, ACCENT)
+    if phase == 0:
+        return img
+    histogram(d, B_X, B_MID, g.sum(0), scales[1], ACCENT, B_PITCH, B_BAR)
     if cut is None:
         return img
-    marker = INK if chosen else MUTED
-    for k in range(SILOS):
-        x = col_x(k) + 6 * cut - 1
-        hairline(d, x, C_MID - 16, x, C_MID + 18, marker)
-        if grown:
-            hairline(d, x, A_MID - 25, x, A_MID + 25, INK)
+    x = gap_x(B_X, cut, B_PITCH, B_BAR)
+    cut_line(d, x, B_MID - 44, B_MID + 52)
+    if chosen:
+        caps(d, x - 8, B_MID - 24, "BEST SPLIT", align="right", fill=INK)
     return img
 
 
 def method_frames() -> list[Image.Image]:
     g, h = illustrative_sums()
     total = g.sum(0)
-    running = np.abs(np.cumsum(g, axis=0)).max()
-    scales = (A_PX / np.abs(g).max(), B_PX / running, C_PX / np.abs(total).max())
+    scales = (A_PX / np.abs(g).max(), B_PX / np.abs(total).max())
     best = best_cut(total, h.sum(0))
-    frame = functools.partial(method_frame, method_stage(), g, scales, upto=SILOS)
-    frames = [frame(upto=0)] * 4
-    frames += [frame(upto=k + 1, active=k) for k in range(SILOS)]
-    frames += [frame(sending=True)] * 2
-    frames += [frame(sending=True, returned=True)] * 2
-    frames += [frame(returned=True, cut=c) for c in range(1, BINS)]
-    frames += [frame(returned=True, cut=best, chosen=True)] * 4
-    frames += [frame(returned=True, cut=best, chosen=True, grown=True)] * 10
+    frame = functools.partial(method_frame, method_stage(), g, scales)
+    adding = functools.partial(frame, phase=1)
+    applying = functools.partial(frame, phase=2, cut=best, chosen=True)
+    frames = [frame(shown=0)] * 4
+    for k in range(SILOS):
+        frames += [frame(shown=k + 1, active=k)] * 2
+    frames += [frame(up=True)] * 4
+    frames += [adding()] * 6
+    for c in range(1, BINS):
+        frames += [adding(cut=c)] * 3
+    frames += [adding(cut=best, chosen=True)] * 8
+    frames += [applying(down=True)] * 4
+    frames += [applying(split=True)] * SPLIT_HOLD
     return frames
 
 
 def panel_x(i: int) -> int:
-    return M + 272 * i
+    return 56 + 256 * i
 
 
 def bar_x(i: int, k: int) -> int:
@@ -429,6 +460,10 @@ def bar(
     d.rounded_rectangle(box, radius, fill=fill, outline=outline, corners=corners)
 
 
+def ghost(d: ImageDraw.ImageDraw, x: int, h: int) -> None:
+    bar(d, x, h, fill=FAINT_HARM if h < 0 else None, outline=FAINT)
+
+
 def ease(t: float) -> float:
     return 4 * t**3 if t < 0.5 else 1 - (-2 * t + 2) ** 3 / 2
 
@@ -438,13 +473,18 @@ def results_stage(
 ) -> Image.Image:
     img = chrome(runs, KICKER, *RESULTS_FOOT)
     d = ImageDraw.Draw(img)
+    for pts in GRID_PTS:
+        y = ZERO_Y + pts * PX_PER_PT
+        caps(d, panel_x(0) - 6, y + 4, f"\u2212{pts}", align="right")
+        for i in range(len(cells)):
+            hairline(d, panel_x(i), y, panel_x(i) + PANEL_W - 1, y)
     for i, cell in enumerate(cells):
         caps(d, panel_x(i), 92, f"HETEROGENEITY {cell.heterogeneity}")
-        hairline(d, panel_x(i), ZERO_Y, panel_x(i) + 247, ZERO_Y, FAINT)
+        hairline(d, panel_x(i), ZERO_Y, panel_x(i) + PANEL_W - 1, ZERO_Y, FAINT)
         digits(d, TICK_Y, [bar_x(i, k) + 8 for k in range(SILOS)])
-    caps(d, bar_x(0, 0), ZERO_Y + 28, "0 = LOCAL-ONLY")
+    caps(d, panel_x(0), ZERO_Y + 28, "0 = LOCAL-ONLY")
     if legend:
-        caps(d, bar_x(0, 0), ZERO_Y + 46, "OUTLINE = BEFORE REFIT")
+        caps(d, panel_x(0), ZERO_Y + 46, "FAINT RED = BEFORE REFIT")
     return img
 
 
@@ -460,13 +500,13 @@ def results_frame(
     for i, row in enumerate(heights):
         for k, h in enumerate(row):
             if ghosts:
-                bar(d, bar_x(i, k), ghosts[i][k], outline=FAINT)
+                ghost(d, bar_x(i, k), ghosts[i][k])
             bar(d, bar_x(i, k), h, fill=GAIN if h > 0 else HARM)
         value(d, panel_x(i), 120, counts[i])
         width = font("value", 20).getlength(counts[i])
         caps(d, panel_x(i) + width + 10, 120, "HARMED")
-    for x, y, anchor, text in labels:
-        d.text((x, y), text, font=font("value", 20), fill=INK, anchor=anchor)
+    for x, y, anchor, text, fill in labels:
+        d.text((x, y), text, font=font("value", 20), fill=fill, anchor=anchor)
     return img
 
 
@@ -480,21 +520,22 @@ def results_frames(cells: list[Cell]) -> list[Image.Image]:
     fed, recal = cells[-1].fed, cells[-1].recal
     worst, least = int(np.argmin(fed)), int(np.argmin(recal))
     worst_y, least_y = ZERO_Y - fitted[-1][worst], ZERO_Y - refit[-1][least] - 12
-    worst_label = (bar_x(2, worst) - 6, worst_y, "rs", signed(fed[worst]))
-    least_label = (bar_x(2, least) + 8, least_y, "ms", signed(recal[least]))
-    before = [sum(h < 0 for h in row) for row in fitted]
+    worst_label = Label(bar_x(2, worst) - 6, worst_y, "rm", signed(fed[worst]))
+    least_label = Label(bar_x(2, least) + 8, least_y, "ms", signed(recal[least]))
+    was_worst = worst_label._replace(fill=MUTED)
+    before = [sum(v < 0 for v in c.fed) for c in cells]
+    after = [sum(v < 0 for v in c.recal) for c in cells]
     harm_stage = results_stage(HARM_HEAD, cells, legend=False)
     fix_stage = results_stage(FIX_HEAD, cells, legend=True)
 
     as_fitted = [str(n) for n in before]
+    refitted = [f"{n} → {m}" for n, m in zip(before, after, strict=True)]
     frames = [results_frame(harm_stage, fitted, as_fitted, [worst_label])] * HARM_HOLD
-    for step in range(1, EASE_FRAMES + 1):
+    for step in range(1, EASE_FRAMES):
         heights = tween(fitted, refit, ease(step / EASE_FRAMES))
-        after = [sum(h < 0 for h in row) for row in heights]
-        counts = [f"{n} → {m}" for n, m in zip(before, after)]
-        last = step == EASE_FRAMES
-        labels: list[Label] = [worst_label, least_label] if last else [worst_label]
-        frames.append(results_frame(fix_stage, heights, counts, labels, fitted))
+        frames.append(results_frame(fix_stage, heights, as_fitted, [was_worst], fitted))
+    labels = [was_worst, least_label]
+    frames.append(results_frame(fix_stage, refit, refitted, labels, fitted))
     return frames
 
 

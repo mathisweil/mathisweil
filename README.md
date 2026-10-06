@@ -18,9 +18,9 @@ I have just finished the MSc in Data Science and Machine Learning at UCL, with a
 
 ### Return-Weighted ELBO Fine-Tuning Degrades Masked Diffusion Planners
 
-<a href="https://github.com/mathisweil/craftax-ReMDM-planner"><img src="assets/craftax-before-after.gif" alt="Craftax Classic, world seed 9: the DAgger planner unlocks 15 achievements; after return-weighted ELBO fine-tuning the same planner unlocks 10. Paper score 11.81 (checkpoint) to 8.22 (mean of three seeds)."></a>
+<a href="https://github.com/mathisweil/craftax-ReMDM-planner"><img src="assets/craftax-before-after.gif" alt="Craftax Classic, world seed 9, two planners side by side. The DAgger checkpoint unlocks 15 of 22 achievements and is killed by a zombie at night at step 245. After return-weighted ELBO fine-tuning the same planner unlocks 10 and is killed by a zombie at night at step 191; it never drinks water, eats a cow, wakes from sleep, makes a stone pickaxe or defeats a zombie. Paper score 11.81 (checkpoint) to 8.22 (mean of three seeds)."></a>
 
-<sub>Same world and seed (seed 9, picked by a fixed rule; the script prints the sweep). Right: the paper's baseline_rl condition, retrained with the paper command. Each 32-action plan is denoised in 50 steps; 8 actions run before replanning.</sub>
+<sub>Same world and seed (seed 9, picked by a fixed rule; the script prints the sweep). Right: the paper's baseline_rl condition, retrained with the paper command. The icons are Craftax's 22 achievements; red marks the five the planner unlocked before fine-tuning but not after.</sub>
 
 Muhammad Ali Khan\*, **Mathis Weil**\*, Ahmet H. Güzel, Jack Parker-Holder, Ilija Bogunovic<br>
 *NeurIPS 2026 Workshop: Beyond Next-Token Prediction (BeNTo)* · Sydney, December 2026 · <sub>\* equal contribution</sub><br>
@@ -35,9 +35,9 @@ Masked diffusion planners denoise a whole action plan at once and can revise any
 <details>
 <summary>MiniHack: the planner drafts 64 moves at once</summary>
 
-<a href="https://github.com/mathisweil/minihack-ReMDM-planner"><img src="assets/minihack-planner.gif" alt="MiniHack Room-Random-15x15: a masked diffusion planner denoises a 64-move plan in parallel, executes 16 moves, replans with them locked, and reaches the stairs."></a>
+<a href="https://github.com/mathisweil/minihack-ReMDM-planner"><img src="assets/minihack-planner.gif" alt="MiniHack Room-Random-15x15, evaluation layout 13: a masked diffusion planner fills in a 64-move plan in any order over 10 denoising steps; its first 7 moves lead straight to the stairs, and the agent follows them to win."></a>
 
-<sub>Shown: evaluation layout 0, won in 66 moves (picked by a fixed rule; the script prints it). On this room it wins 38% of episodes, and 48.5% across the four in-distribution layouts (paper Table 8).</sub>
+<sub>Shown: evaluation layout 13, won in 7 moves by its first plan (picked by a fixed rule; the script prints it). Only 2 of the 50 evaluation layouts are won that directly; most wins replan several times. On this room it wins 38% of episodes, and 48.5% across the four in-distribution layouts (paper Table 8).</sub>
 
 </details>
 
@@ -60,7 +60,7 @@ Masked diffusion planners denoise a whole action plan at once and can revise any
 
 MSc thesis, UCL, in collaboration with Ki through UCL IXN · Supervisor: Prof Philip Treleaven · September 2026
 
-<img src="assets/fedgbt-method-results.gif" alt="Ten simulated insurers on public freMTPL motor data grow the same federated XGBoost tree from summed per-bin gradient and Hessian totals. As rate multipliers push their claim rates apart, the shared model prices 0, then 5, then 7 of 10 insurers worse than their own models, the worst by 16.21 points of deviance explained; on this dial one refitted intercept per insurer puts all ten back above their own models.">
+<img src="assets/fedgbt-method-results.gif" alt="Ten simulated insurers on public freMTPL motor data grow the same federated XGBoost tree: each sums its gradients per bin, a coordinator adds the sums and picks the best split, and every insurer applies it. As rate multipliers push their claim rates apart, the shared model prices 0, then 5, then 7 of 10 insurers worse than their own models, the worst by 16.21 points of deviance explained; on this dial one refitted intercept per insurer puts all ten back above their own models, with the harm before the refit shown in faint red.">
 
 <sub>Method panels are illustrative; results are public freMTPL data across ten simulated insurers, with claim rates pushed apart by rate multipliers.</sub>
 
