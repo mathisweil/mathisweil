@@ -64,12 +64,12 @@ MSc thesis, UCL, in collaboration with Ki through UCL IXN · Supervisor: Prof Ph
 
 <sub>Method panels are illustrative; results are public freMTPL data across ten simulated insurers, with claim rates pushed apart by rate multipliers.</sub>
 
-Insurers cannot pool their claims data. I built a federated XGBoost benchmark in which each insurer keeps its raw records and shares only histogram sums, verified that it reproduces the pooled model, and measured insurer by insurer, under a pre-registered protocol, when sharing helps and when it hurts. Results here use the public freMTPL motor data: 678k policies across ten simulated insurers.
+Insurers cannot pool their claims data. I built a federated XGBoost benchmark in which each insurer keeps its raw records and shares only summary statistics such as gradient histograms, verified that it reproduces the pooled model, and measured insurer by insurer, under a pre-registered protocol, when sharing helps and when it hurts. Results here use the public freMTPL motor data: 678k policies across ten simulated insurers.
 
 - **Federation reproduces pooling.** On equal random splits it recovers a median 0.99 of the pooled model's per-insurer gain (pre-registered bar: 0.5), and a correctness gate checks it against the pooled model.
 - **Where sharing hurts, and a fix.** As rate multipliers push claim rates apart, the shared model prices 0, then 5, then 7 of 10 insurers worse than their own model (worst: 16.2 points of deviance explained). On this dial, refitting one intercept per insurer puts all ten back above.
 
-<sub>XGBoost federated histogram aggregation · Flower · PyTorch · Hydra · 13.5k lines · 592 tests · strict mypy · CI</sub>
+<sub>XGBoost federated histogram aggregation · Hydra · 13.5k lines · 592 tests · strict mypy · CI</sub>
 
 Code is private to Ki; access on request through Ki.
 
