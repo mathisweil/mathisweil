@@ -4,7 +4,7 @@ ML engineer and researcher working on diffusion planners, RL fine-tuning and fed
 
 [Website](https://mathisweil.github.io/) · [Email](mailto:mathis.weil@outlook.com) · [LinkedIn](https://www.linkedin.com/in/mathis-weil/) · [Google Scholar](https://scholar.google.com/citations?user=HZLNhcoAAAAJ) · [OpenReview](https://openreview.net/profile?id=~Mathis_Weil1) · [Hugging Face](https://huggingface.co/mathisweil) · [CV](assets/mathis-weil-cv.pdf)
 
-I have just finished the MSc in Data Science and Machine Learning at UCL, with a co-first-authored NeurIPS 2026 workshop paper on masked diffusion planners and a thesis on federated gradient boosting for insurance pricing, in collaboration with Ki, a digital syndicate in the Lloyd's market.
+I have just finished the MSc in Data Science and Machine Learning at UCL, with a co-first-authored NeurIPS 2026 workshop paper on masked diffusion planners and a thesis on federated gradient boosting for insurance pricing, in collaboration with Ki, Lloyd's first fully digital follow syndicate.
 
 **Open to ML engineering, applied research and data science roles in London.** Eligible for the UK Graduate visa, no sponsorship needed.
 
@@ -75,13 +75,13 @@ Code is private to Ki; access on request through Ki.
 
 ## Other projects
 
-- **[Eviction-aware fine-tuning](https://github.com/mathisweil/evo-memory)** · LoRA fine-tuning of Llama-3.2-1B while a learned policy (NAMM) evicts 75–85% of the KV cache: 28.9 F1 on five LongBench QA tasks, against 19.0 for standard fine-tuning under the same eviction and 32.6 with the full cache. UCL team project of five, built on Sakana AI's NAMM ([report](https://github.com/mathisweil/evo-memory/blob/main/UCL_NLP_2026.pdf)).
+- **[Eviction-aware fine-tuning](https://github.com/mathisweil/evo-memory)** · LoRA fine-tuning of Llama-3.2-1B while a learned policy (NAMM) evicts 75 to 85% of the KV cache: 28.9 F1 on five LongBench QA tasks, against 19.0 for standard fine-tuning under the same eviction and 32.6 with the full cache. UCL team project of five, built on Sakana AI's NAMM ([report](https://github.com/mathisweil/evo-memory/blob/main/UCL_NLP_2026.pdf)).
 - **[SkillFindr](https://github.com/mathisweil/SkillFindr-SemanticSearchEngine)** · Semantic search and a RAG API over 1,200+ IBM SkillsBuild courses (Sentence-BERT, pgvector, FastAPI): Recall@20 0.899 and MRR 0.843 on 50 annotated queries. QMUL final-year project with IBM.
 - **[BidBird](https://github.com/mathisweil/bidwell_hackathon)** · Planning- and appeal-outcome risk models (Random Forest, XGBoost) served through FastAPI. 1st place with a UCL team at the Bidwells Real Estate Planning Hackathon, November 2025.
 
 ## Background
 
-- **Machine Learning Researcher**, Ki, Jun–Sep 2026 · MSc thesis research, embedded in the underwriting team
-- **MSc Data Science and Machine Learning**, University College London, 2025–2026
-- **Postgraduate Teaching Assistant**, UCL, 2025–2026 · weekly practicals and marking for 280+ MSc and BSc students
-- **BSc Computer Science**, Queen Mary University of London, 2022–2025 · First Class Honours (83%), Final-Year Prize, Demonstrator of the Year 2025 (one of 14 in computer science)
+- **Machine Learning Researcher**, Ki, Jun 2026 - Sep 2026 · MSc thesis research, embedded in the underwriting team
+- **MSc Data Science and Machine Learning**, University College London, 2025 - 2026
+- **Postgraduate Teaching Assistant**, UCL, 2025 - 2026 · weekly practicals and marking for 280+ MSc and BSc students
+- **BSc Computer Science**, Queen Mary University of London, 2022 - 2025 · First Class Honours (83%), Final-Year Prize, Demonstrator of the Year 2025 (one of 14 in computer science)
