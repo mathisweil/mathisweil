@@ -2,7 +2,7 @@
 
 ML engineer and researcher working on diffusion planners, RL fine-tuning and federated learning. London.
 
-[Email](mailto:mathis.weil@outlook.com) · [LinkedIn](https://www.linkedin.com/in/mathis-weil/) · [Google Scholar](https://scholar.google.com/citations?user=HZLNhcoAAAAJ) · [OpenReview](https://openreview.net/profile?id=~Mathis_Weil1) · [Hugging Face](https://huggingface.co/mathisweil) · [CV](assets/mathis-weil-cv.pdf)
+[Website](https://mathisweil.github.io/) · [Email](mailto:mathis.weil@outlook.com) · [LinkedIn](https://www.linkedin.com/in/mathis-weil/) · [Google Scholar](https://scholar.google.com/citations?user=HZLNhcoAAAAJ) · [OpenReview](https://openreview.net/profile?id=~Mathis_Weil1) · [Hugging Face](https://huggingface.co/mathisweil) · [CV](assets/mathis-weil-cv.pdf)
 
 I have just finished the MSc in Data Science and Machine Learning at UCL, with a co-first-authored NeurIPS 2026 workshop paper on masked diffusion planners and a thesis on federated gradient boosting for insurance pricing, in collaboration with Ki, a digital syndicate in the Lloyd's market.
 
