@@ -75,7 +75,7 @@ Code is private to Ki; access on request through Ki.
 
 ## Other projects
 
-- **[Eviction-aware fine-tuning](https://github.com/mathisweil/evo-memory)** · LoRA fine-tuning of Llama-3.2-1B while a learned policy (NAMM) evicts 75 to 85% of the KV cache: 28.9 F1 on five LongBench QA tasks, against 19.0 for standard fine-tuning under the same eviction and 32.6 with the full cache. UCL team project of five, built on Sakana AI's NAMM ([report](https://github.com/mathisweil/evo-memory/blob/main/UCL_NLP_2026.pdf)).
+- **[Eviction-aware fine-tuning](https://github.com/mathisweil/evo-memory)** · LoRA fine-tuning of Llama-3.2-1B while a learned policy (NAMM) evicts 75 to 85% of the KV cache, to test whether training under eviction wins back the accuracy it costs. The early gains came from a bug that let extra context into the model's window; I traced it through the git history and proved it. Once it was fixed, eviction-aware fine-tuning gave little or no improvement over standard fine-tuning. UCL team project of five, built on Sakana AI's NAMM.
 - **[SkillFindr](https://github.com/mathisweil/SkillFindr-SemanticSearchEngine)** · Semantic search and a RAG API over 1,200+ IBM SkillsBuild courses (Sentence-BERT, pgvector, FastAPI): Recall@20 0.899 and MRR 0.843 on 50 annotated queries. QMUL final-year project with IBM.
 - **[BidBird](https://github.com/mathisweil/bidwell_hackathon)** · Planning- and appeal-outcome risk models (Random Forest, XGBoost) served through FastAPI. 1st place with a UCL team at the Bidwells Real Estate Planning Hackathon, November 2025.
 
